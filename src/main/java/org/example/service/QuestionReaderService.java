@@ -2,9 +2,8 @@ package org.example.service;
 
 import org.example.model.Question;
 import org.example.model.QuestionType;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVRecord;
 import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -13,10 +12,15 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVRecord;
+
+@Service
 public class QuestionReaderService {
 
     private final Resource questionsResource;
 
+    // Теперь внедряем Resource напрямую
     public QuestionReaderService(Resource questionsResource) {
         this.questionsResource = questionsResource;
     }
@@ -35,16 +39,17 @@ public class QuestionReaderService {
                 String typeStr = record.get("type");
                 String questionText = record.get("question");
                 String optionsStr = record.get("options");
+                String correctAnswer = record.get("correctAnswer");
 
                 QuestionType type = QuestionType.valueOf(typeStr);
                 List<String> options = new ArrayList<>();
-                if (!optionsStr.isEmpty()) {
+                if (!optionsStr.trim().isEmpty()) {
                     for (String opt : optionsStr.split(",")) {
                         options.add(opt.trim());
                     }
                 }
 
-                questions.add(new Question(type, questionText, options));
+                questions.add(new Question(type, questionText, options, correctAnswer));
             }
         } catch (IOException e) {
             throw new RuntimeException("Failed to read questions from CSV", e);

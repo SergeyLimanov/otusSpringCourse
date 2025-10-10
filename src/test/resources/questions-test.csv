@@ -1,0 +1,3 @@
+type,question,options,correctAnswer
+MULTIPLE_CHOICE,What is 2+2?,"3,4,5",4
+FREE_TEXT,What is Java?,,A programming language

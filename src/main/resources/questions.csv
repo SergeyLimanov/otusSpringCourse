@@ -1,6 +1,6 @@
-type,question,options
-MULTIPLE_CHOICE,What is 2 + 2?,"4,5,6"
-MULTIPLE_CHOICE,Which language is used in Spring?,"Java,Kotlin,Python"
-FREE_TEXT,What does IoC stand for?,
-MULTIPLE_CHOICE,Which annotation marks a Spring bean?,"@Component,@Service,@Repository"
-FREE_TEXT,Name one Spring module,
+type,question,options,correctAnswer
+MULTIPLE_CHOICE,What is 2+2?,"3,4,5",4
+MULTIPLE_CHOICE,Which is a Java keyword?,"python,final,banana",final
+FREE_TEXT,What does JVM stand for?,,Java Virtual Machine
+MULTIPLE_CHOICE,Which data type is used for true/false?,"int,boolean,string",boolean
+MULTIPLE_CHOICE,What is the capital of Russia?,"Moscow,Samara,Penza",Moscow
