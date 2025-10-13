@@ -20,7 +20,6 @@ public class QuestionReaderService {
 
     private final Resource questionsResource;
 
-    // Теперь внедряем Resource напрямую
     public QuestionReaderService(Resource questionsResource) {
         this.questionsResource = questionsResource;
     }
