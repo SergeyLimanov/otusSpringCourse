@@ -24,7 +24,7 @@ class TestingServiceTest {
 
     @Test
     void shouldReturnCorrectScoreForMixedAnswers() {
-        // Arrange: 5 вопросов
+        // Arrange
         var questions = Arrays.asList(
                 new Question(QuestionType.MULTIPLE_CHOICE, "What is 2+2?", List.of("3", "4", "5"), "4"),
                 new Question(QuestionType.FREE_TEXT, "What is Java?", List.of(), "A programming language"),
@@ -64,7 +64,7 @@ class TestingServiceTest {
         TestingService testingService = new TestingService(readerService, ioService, 3);
         int score = testingService.runTest();
 
-        assertEquals(4, score); // Q1, Q3, Q4, Q5 — правильные
+        assertEquals(4, score);
     }
 
     @Test

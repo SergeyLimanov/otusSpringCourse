@@ -22,7 +22,7 @@ public class TestingService {
         this.passingScore = passingScore;
     }
 
-    public int runTest() { // возвращаем результат для тестирования!
+    public int runTest() {
 
         List<Question> allQuestions = readerService.readQuestions();
         if (allQuestions.size() < 5) {
@@ -63,11 +63,11 @@ public class TestingService {
         // Вывод результата);
         ioService.print(String.format("Correct answers: %d / 5%n", correctCount));
         if (correctCount >= passingScore) {
-            ioService.print("Result: PASSED ✅\n");
+            ioService.print("Result: PASSED ✅");
         } else {
-            ioService.print("Result: FAILED ❌\n");
+            ioService.print("Result: FAILED ❌");
         }
 
-        return correctCount; // ← для тестов
+        return correctCount;
     }
 }
