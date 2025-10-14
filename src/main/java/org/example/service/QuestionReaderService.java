@@ -16,7 +16,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
 @Service
-public class QuestionReaderService {
+public class QuestionReaderService implements QuestionReader {
 
     private final Resource questionsResource;
 
@@ -24,6 +24,7 @@ public class QuestionReaderService {
         this.questionsResource = questionsResource;
     }
 
+    @Override
     public List<Question> readQuestions() {
         List<Question> questions = new ArrayList<>();
         try (Reader reader = new InputStreamReader(

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class TestingService {
+public class TestingService implements ITesting {
 
     private final QuestionReaderService readerService;
     private final IOService ioService;
@@ -22,6 +22,7 @@ public class TestingService {
         this.passingScore = passingScore;
     }
 
+    @Override
     public int runTest() {
 
         List<Question> allQuestions = readerService.readQuestions();
@@ -31,35 +32,51 @@ public class TestingService {
 
         int correctCount = 0;
         for (int i = 0; i < allQuestions.size(); i++) {
-            Question q = allQuestions.get(i);
-            ioService.print(String.format("%nQuestion %d: %s%n", i + 1, q.getText()));
+            Question question = allQuestions.get(i);
+            ioService.print(String.format("%nQuestion %d: %s%n", i + 1, question.getText()));
 
-            if (q.getType() == QuestionType.MULTIPLE_CHOICE) {
-                for (int j = 0; j < q.getOptions().size(); j++) {
-                    ioService.print(String.format("  %c) %s%n", 'A' + j, q.getOptions().get(j)));
-                }
-                ioService.print("Your answer (A, B, C...): ");
-                String input = ioService.readLine().trim().toUpperCase();
-
-                if (input.length() == 1 && Character.isLetter(input.charAt(0))) {
-                    char choice = input.charAt(0);
-                    int index = choice - 'A';
-                    if (index >= 0 && index < q.getOptions().size()) {
-                        String selectedOption = q.getOptions().get(index);
-                        if (selectedOption.equalsIgnoreCase(q.getCorrectAnswer())) {
-                            correctCount++;
-                        }
-                    }
-                }
+            if (question.getType() == QuestionType.MULTIPLE_CHOICE) {
+                correctCount = getCorrectAnswerCount(question, correctCount);
             } else {
                 ioService.print("Your answer: ");
                 String answer = ioService.readLine().trim();
-                if (answer.equalsIgnoreCase(q.getCorrectAnswer())) {
+                if (answer.equalsIgnoreCase(question.getCorrectAnswer())) {
                     correctCount++;
                 }
             }
         }
 
+        printResult(correctCount);
+
+        return correctCount;
+    }
+
+    private int getCorrectAnswerCount(Question q, int correctCount) {
+        for (int j = 0; j < q.getOptions().size(); j++) {
+            ioService.print(String.format("  %c) %s%n", 'A' + j, q.getOptions().get(j)));
+        }
+        ioService.print("Your answer (A, B, C...): ");
+        String input = ioService.readLine().trim().toUpperCase();
+
+        if (input.length() == 1 && Character.isLetter(input.charAt(0))) {
+            correctCount = getCorrectCount(input, q, correctCount);
+        }
+        return correctCount;
+    }
+
+    private static int getCorrectCount(String input, Question q, int correctCount) {
+        char choice = input.charAt(0);
+        int index = choice - 'A';
+        if (index >= 0 && index < q.getOptions().size()) {
+            String selectedOption = q.getOptions().get(index);
+            if (selectedOption.equalsIgnoreCase(q.getCorrectAnswer())) {
+                correctCount++;
+            }
+        }
+        return correctCount;
+    }
+
+    private void printResult(int correctCount) {
         // Вывод результата);
         ioService.print(String.format("Correct answers: %d / 5%n", correctCount));
         if (correctCount >= passingScore) {
@@ -67,7 +84,5 @@ public class TestingService {
         } else {
             ioService.print("Result: FAILED ❌");
         }
-
-        return correctCount;
     }
 }
