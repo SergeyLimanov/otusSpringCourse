@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public class TestingService implements ITesting {
 
-    private final QuestionReaderService readerService;
+    private final QuestionReader readerService;
     private final IOService ioService;
     private final int passingScore;
 
