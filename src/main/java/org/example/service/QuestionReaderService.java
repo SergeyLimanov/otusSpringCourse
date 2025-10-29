@@ -2,6 +2,9 @@ package org.example.service;
 
 import org.example.model.Question;
 import org.example.model.QuestionType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +23,10 @@ public class QuestionReaderService implements QuestionReader {
 
     private final Resource questionsResource;
 
+    @Autowired
+    public QuestionReaderService(@Value("${app.questions.file}") String fileName) {
+        this.questionsResource = new ClassPathResource(fileName);
+    }
     public QuestionReaderService(Resource questionsResource) {
         this.questionsResource = questionsResource;
     }

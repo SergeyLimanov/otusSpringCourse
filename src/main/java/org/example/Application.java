@@ -1,15 +1,13 @@
 package org.example;
 
 
-import org.example.config.AppConfig;
-import org.example.service.ITesting;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
 
 public class Application {
     public static void main(String[] args) {
-        try (var context = new AnnotationConfigApplicationContext(AppConfig.class)) {
-            ITesting testingService = context.getBean(ITesting.class);
-            testingService.runTest();
-        }
+        SpringApplication.run(Application.class, args);
     }
 }
