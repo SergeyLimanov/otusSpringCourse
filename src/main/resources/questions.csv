@@ -1,0 +1,6 @@
+type,question,options,correctAnswer
+MULTIPLE_CHOICE,What is 2+2?,"3,4,5",4
+MULTIPLE_CHOICE,Which is a Java keyword?,"python,final,banana",final
+FREE_TEXT,What does JVM stand for?,,Java Virtual Machine
+MULTIPLE_CHOICE,Which data type is used for true/false?,"int,boolean,string",boolean
+MULTIPLE_CHOICE,What is the capital of Russia?,"Moscow,Samara,Penza",Moscow
