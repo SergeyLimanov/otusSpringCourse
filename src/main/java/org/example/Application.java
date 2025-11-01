@@ -1,15 +1,13 @@
 package org.example;
 
-import org.example.service.QuestionDisplayService;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
 
 public class Application {
-    public static void main(String[] args) {
-        try (ClassPathXmlApplicationContext context =
-                     new ClassPathXmlApplicationContext("applicationContext.xml")) {
 
-            QuestionDisplayService displayService = context.getBean(QuestionDisplayService.class);
-            displayService.displayAllQuestions();
-        }
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
     }
 }

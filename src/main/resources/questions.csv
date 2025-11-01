@@ -1,6 +1,0 @@
-type,question,options
-MULTIPLE_CHOICE,What is 2 + 2?,"4,5,6"
-MULTIPLE_CHOICE,Which language is used in Spring?,"Java,Kotlin,Python"
-FREE_TEXT,What does IoC stand for?,
-MULTIPLE_CHOICE,Which annotation marks a Spring bean?,"@Component,@Service,@Repository"
-FREE_TEXT,Name one Spring module,
