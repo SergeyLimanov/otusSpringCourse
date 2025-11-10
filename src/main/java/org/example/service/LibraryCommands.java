@@ -1,9 +1,8 @@
 package org.example.service;
 
-import org.example.dao.AuthorDao;
-import org.example.dao.GenreDao;
 import org.example.model.Author;
 import org.example.model.Book;
+import org.example.model.Comment;
 import org.example.model.Genre;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -16,13 +15,9 @@ import java.util.NoSuchElementException;
 public class LibraryCommands {
 
     private final BookService bookService;
-    private final AuthorDao authorDao;
-    private final GenreDao genreDao;
 
-    public LibraryCommands(BookService bookService, AuthorDao authorDao, GenreDao genreDao) {
+    public LibraryCommands(BookService bookService) {
         this.bookService = bookService;
-        this.authorDao = authorDao;
-        this.genreDao = genreDao;
     }
 
     @ShellMethod("Test command")
@@ -62,17 +57,26 @@ public class LibraryCommands {
         }
     }
 
+    @ShellMethod(key = "book-get", value = "Get book with comments")
+    public Book getBook(@ShellOption(help = "Book ID") Long id) {
+        try {
+            return bookService.findById(id);
+        } catch (Exception e) {
+            throw new RuntimeException("Book not found: " + e.getMessage());
+        }
+    }
+
     // === Авторы ===
 
     @ShellMethod(key = "authors", value = "List all authors")
     public List<Author> listAuthors() {
-        return authorDao.findAll();
+        return bookService.listAllAuthors();
     }
 
     @ShellMethod(key = "author-add", value = "Add a new author")
     public String addAuthor(@ShellOption(help = "Author name") String name) {
         try {
-            Author author = authorDao.insert(name);
+            Author author = bookService.createAuthor(name);
             return "Author added: " + author;
         } catch (Exception e) {
             return "Error adding author: " + e.getMessage();
@@ -83,16 +87,47 @@ public class LibraryCommands {
 
     @ShellMethod(key = "genres", value = "List all genres")
     public List<Genre> listGenres() {
-        return genreDao.findAll();
+        return bookService.listAllGenres();
     }
 
     @ShellMethod(key = "genre-add", value = "Add a new genre")
     public String addGenre(@ShellOption(help = "Genre name") String name) {
         try {
-            Genre genre = genreDao.insert(name);
+            Genre genre = bookService.createGenre(name);
             return "Genre added: " + genre;
         } catch (Exception e) {
             return "Error adding genre: " + e.getMessage();
+        }
+    }
+
+    // === Комментарии ===
+
+    @ShellMethod(key = "comment-add", value = "Add a comment to a book")
+    public String addComment(
+            @ShellOption(help = "Book ID") Long bookId,
+            @ShellOption(help = "Comment text") String text) {
+        try {
+            Comment comment = bookService.addComment(bookId, text);
+            return "Comment added (ID: " + comment.getId() + "): " + text;
+        } catch (NoSuchElementException e) {
+            return "Error: " + e.getMessage();
+        } catch (Exception e) {
+            return "Unexpected error: " + e.getMessage();
+        }
+    }
+
+    @ShellMethod(key = "comments", value = "List all comments for a book")
+    public List<Comment> listComments(@ShellOption(help = "Book ID") Long bookId) {
+        return bookService.findCommentsByBookId(bookId);
+    }
+
+    @ShellMethod(key = "comment-delete", value = "Delete a comment by ID")
+    public String deleteComment(@ShellOption(help = "Comment ID") Long commentId) {
+        try {
+            bookService.deleteComment(commentId);
+            return "Comment with ID " + commentId + " deleted.";
+        } catch (Exception e) {
+            return "Error deleting comment: " + e.getMessage();
         }
     }
 }
