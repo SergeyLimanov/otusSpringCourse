@@ -65,4 +65,19 @@ class CommentRepositoryTest {
         assertThat(all).hasSize(1);
         assertThat(all.get(0).getText()).isEqualTo("К2");
     }
+
+    @Test
+    void shouldFindCommentsContainingKeyword() {
+        Author a = authorRepository.save(new Author(null, "A", new ArrayList<>()));
+        Genre g = genreRepository.save(new Genre(null, "G", new ArrayList<>()));
+        Book b = bookRepository.save(new Book(null, "Книга", a, g, new ArrayList<>()));
+
+        commentRepository.save(new Comment(null, "Это потрясающая книга!", b));
+        commentRepository.save(new Comment(null, "Скучно и нудно", b));
+        commentRepository.save(new Comment(null, "Рекомендую всем", b));
+
+        List<Comment> comments = commentRepository.findByTextContaining("книга");
+        assertThat(comments).hasSize(1);
+        assertThat(comments.get(0).getText()).containsIgnoringCase("книга");
+    }
 }

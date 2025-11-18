@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
-@Transactional
 public class BookService {
 
     private final BookRepository bookRepository;
@@ -93,6 +92,7 @@ public class BookService {
         return commentRepository.save(comment);
     }
 
+    @Transactional
     public void deleteComment(Long commentId) {
         if (!commentRepository.existsById(commentId)) {
             throw new NoSuchElementException("Comment not found with id: " + commentId);
@@ -100,6 +100,7 @@ public class BookService {
         commentRepository.deleteById(commentId);
     }
 
+    @Transactional
     public Author createAuthor(String name) {
         return authorRepository.save(new Author(null, name, new ArrayList<>()));
     }
@@ -109,6 +110,7 @@ public class BookService {
         return authorRepository.findAll();
     }
 
+    @Transactional
     public Genre createGenre(String name) {
         return genreRepository.save(new Genre(null, name, new ArrayList<>()));
     }
@@ -117,4 +119,15 @@ public class BookService {
     public List<Genre> listAllGenres() {
         return genreRepository.findAll();
     }
+
+    @Transactional(readOnly = true)
+    public List<Book> findBooksByAuthorName(String authorName) {
+        return bookRepository.findAllByAuthorName(authorName);
+    }
+
+    @Transactional(readOnly = true)
+    public long countBooksInGenre(String genreName) {
+        return bookRepository.countBooksByGenreName(genreName);
+    }
+
 }

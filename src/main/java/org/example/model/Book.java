@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = "comments")
+@ToString(exclude = {"author", "genre", "comments"})
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

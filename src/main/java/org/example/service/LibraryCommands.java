@@ -130,4 +130,9 @@ public class LibraryCommands {
             return "Error deleting comment: " + e.getMessage();
         }
     }
+
+    @ShellMethod(key = "books-by-author", value = "Find books by author name")
+    public List<Book> booksByAuthor(@ShellOption String authorName) {
+        return bookService.findBooksByAuthorName(authorName);
+    }
 }

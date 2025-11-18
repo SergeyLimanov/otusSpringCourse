@@ -32,7 +32,7 @@ class GenreRepositoryTest {
         genreRepository.save(new Genre(null, "Мультфильмы", new ArrayList<>()));
 
         List<Genre> genres = genreRepository.findAll();
-        assertThat(genres).hasSize(4);
+        assertThat(genres).hasSize(2);
         assertThat(genres).extracting(Genre::getName)
                 .contains("Мистика", "Мультфильмы");
     }

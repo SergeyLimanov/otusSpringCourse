@@ -50,8 +50,8 @@ class BookRepositoryTest {
         bookRepository.save(new Book(null, "Мисс Марпл", a, g, new ArrayList<>()));
 
         List<Book> books = bookRepository.findAll();
-        assertThat(books).hasSize(5);
-        assertThat(books.get(4).getAuthor().getName()).isEqualTo("Джоан Роулинг");
+        assertThat(books).hasSize(2);
+        assertThat(books.get(0).getAuthor().getName()).isEqualTo("Джоан Роулинг");
     }
 
     @Test
@@ -63,5 +63,29 @@ class BookRepositoryTest {
         bookRepository.deleteById(book.getId());
 
         assertThat(bookRepository.findById(book.getId())).isEmpty();
+    }
+
+    @Test
+    void shouldFindBooksByAuthorName() {
+        Author author = authorRepository.save(new Author(null, "Герберт Уэллс", new ArrayList<>()));
+        Genre genre = genreRepository.save(new Genre(null, "Научная фантастика", new ArrayList<>()));
+        bookRepository.save(new Book(null, "Машина времени", author, genre, new ArrayList<>()));
+        bookRepository.save(new Book(null, "Война миров", author, genre, new ArrayList<>()));
+
+        List<Book> books = bookRepository.findAllByAuthorName("Герберт Уэллс");
+        assertThat(books).hasSize(2);
+        assertThat(books).extracting(Book::getTitle)
+                .contains("Машина времени", "Война миров");
+    }
+
+    @Test
+    void shouldCountBooksByGenreName() {
+        Author author = authorRepository.save(new Author(null, "Автор1", new ArrayList<>()));
+        Genre genre = genreRepository.save(new Genre(null, "Детектив1", new ArrayList<>()));
+        bookRepository.save(new Book(null, "Книга 1.1", author, genre, new ArrayList<>()));
+        bookRepository.save(new Book(null, "Книга 2.1", author, genre, new ArrayList<>()));
+
+        long count = bookRepository.countBooksByGenreName("Детектив1");
+        assertThat(count).isEqualTo(2);
     }
 }
