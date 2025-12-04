@@ -66,26 +66,26 @@ class BookRepositoryTest {
     }
 
     @Test
-    void shouldFindBooksByAuthorName() {
+    void shouldFindBooksByAuthorId() {
         Author author = authorRepository.save(new Author(null, "Герберт Уэллс", new ArrayList<>()));
         Genre genre = genreRepository.save(new Genre(null, "Научная фантастика", new ArrayList<>()));
         bookRepository.save(new Book(null, "Машина времени", author, genre, new ArrayList<>()));
         bookRepository.save(new Book(null, "Война миров", author, genre, new ArrayList<>()));
 
-        List<Book> books = bookRepository.findAllByAuthorName("Герберт Уэллс");
+        List<Book> books = bookRepository.findAllByAuthorId(author.getId());
         assertThat(books).hasSize(2);
         assertThat(books).extracting(Book::getTitle)
                 .contains("Машина времени", "Война миров");
     }
 
     @Test
-    void shouldCountBooksByGenreName() {
+    void shouldCountBooksByGenreId() {
         Author author = authorRepository.save(new Author(null, "Автор1", new ArrayList<>()));
         Genre genre = genreRepository.save(new Genre(null, "Детектив1", new ArrayList<>()));
         bookRepository.save(new Book(null, "Книга 1.1", author, genre, new ArrayList<>()));
         bookRepository.save(new Book(null, "Книга 2.1", author, genre, new ArrayList<>()));
 
-        long count = bookRepository.countBooksByGenreName("Детектив1");
+        long count = bookRepository.countByGenreId(genre.getId());
         assertThat(count).isEqualTo(2);
     }
 }

@@ -18,9 +18,8 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @Override
     List<Book> findAll();
 
-    @Query("SELECT b FROM Book b WHERE b.author.name = :authorName")
-    List<Book> findAllByAuthorName(@Param("authorName") String authorName);
+    List<Book> findAllByAuthorId(Long authorId);
+    long countByGenreId(Long genreId);
 
-    @Query(value = "SELECT COUNT(*) FROM books b JOIN genres g ON b.genre_id = g.id WHERE g.name = :genreName", nativeQuery = true)
-    long countBooksByGenreName(@Param("genreName") String genreName);
+
 }
