@@ -3,11 +3,12 @@ package org.example.service;
 import org.example.dao.CommentRepository;
 import org.example.model.Book;
 import org.example.model.Comment;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-
+@Service
 public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final BookService bookService;

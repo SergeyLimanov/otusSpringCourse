@@ -2,11 +2,13 @@ package org.example.service;
 
 import org.example.dao.GenreRepository;
 import org.example.model.Genre;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class GenreServiceImpl implements GenreService{
     private final GenreRepository genreRepository;
 

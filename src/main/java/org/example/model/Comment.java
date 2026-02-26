@@ -9,7 +9,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@ToString(exclude = "book")
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

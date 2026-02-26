@@ -15,13 +15,13 @@ import java.util.NoSuchElementException;
 @ShellComponent
 public class LibraryCommands {
 
-    private final BookServiceImpl bookServiceImpl;
-    private final AuthorServiceImpl authorService;
-    private final CommentServiceImpl commentService;
+    private final BookService bookService;
+    private final AuthorService authorService;
+    private final CommentService commentService;
     private final GenreService genreService;
 
-    public LibraryCommands(BookServiceImpl bookServiceImpl, AuthorServiceImpl authorService, CommentServiceImpl commentService, GenreService genreService) {
-        this.bookServiceImpl = bookServiceImpl;
+    public LibraryCommands(BookService bookService, AuthorService authorService, CommentService commentService, GenreService genreService) {
+        this.bookService = bookService;
         this.authorService = authorService;
         this.commentService = commentService;
         this.genreService = genreService;
@@ -36,7 +36,7 @@ public class LibraryCommands {
 
     @ShellMethod(key = "books", value = "List all books in the library")
     public List<String> listBooks() {
-        List<Book> books = bookServiceImpl.findAll();
+        List<Book> books = bookService.findAll();
         List<String> result = new ArrayList<>();
         for (Book book : books) {
             String line = String.format(
@@ -57,7 +57,7 @@ public class LibraryCommands {
             @ShellOption(help = "Author name") String author,
             @ShellOption(help = "Genre name") String genre) {
         try {
-            Book book = bookServiceImpl.createBook(title, author, genre);
+            Book book = bookService.createBook(title, author, genre);
             return String.format(
                     "Book added: id=%d, title='%s', author='%s', genre='%s'",
                     book.getId(),
@@ -79,7 +79,7 @@ public class LibraryCommands {
             @ShellOption(help = "Author name") String author,
             @ShellOption(help = "Genre name") String genre) {
         try {
-            Book updated = bookServiceImpl.updateBook(id, title, author, genre);
+            Book updated = bookService.updateBook(id, title, author, genre);
             return String.format(
                     "Book updated: id=%d, title='%s', author='%s', genre='%s'",
                     updated.getId(),
@@ -97,7 +97,7 @@ public class LibraryCommands {
     @ShellMethod(key = "book-delete", value = "Delete a book by ID")
     public String deleteBook(@ShellOption(help = "Book ID") Long id) {
         try {
-            bookServiceImpl.deleteById(id);
+            bookService.deleteById(id);
             return "Book with ID " + id + " deleted.";
         } catch (Exception e) {
             return "Error deleting book: " + e.getMessage();
@@ -106,7 +106,7 @@ public class LibraryCommands {
 
     @ShellMethod(key = "book-get", value = "Get book with comments")
     public String getBook(@ShellOption(help = "Book ID") Long id) {
-        Book book = bookServiceImpl.findById(id);
+        Book book = bookService.findById(id);
         if (book == null) {
             return "Book not found with id: " + id;
         }
@@ -207,6 +207,6 @@ public class LibraryCommands {
 
     @ShellMethod(key = "books-by-author", value = "Find books by author name")
     public List<Book> booksByAuthor(@ShellOption String authorName) {
-        return bookServiceImpl.findBooksByAuthorName(authorName);
+        return bookService.findBooksByAuthorName(authorName);
     }
 }

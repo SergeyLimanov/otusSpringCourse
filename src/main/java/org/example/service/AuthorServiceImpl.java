@@ -5,11 +5,13 @@ import org.example.dao.BookRepository;
 import org.example.dao.CommentRepository;
 import org.example.dao.GenreRepository;
 import org.example.model.Author;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class AuthorServiceImpl implements AuthorService{
     private final AuthorRepository authorRepository;
 
