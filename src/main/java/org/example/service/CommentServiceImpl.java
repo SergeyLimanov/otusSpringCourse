@@ -29,6 +29,9 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Comment addComment(Long bookId, String text) {
         Book book = bookService.findById(bookId);
+        if (book == null) {
+            throw new NoSuchElementException("Book not found with id: " + bookId);
+        }
 
         Comment comment = new Comment();
         comment.setText(text);
