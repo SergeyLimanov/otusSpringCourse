@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -36,6 +37,7 @@ class GenreControllerTest {
     private DtoMapper mapper;
 
     @Test
+    @WithMockUser
     void shouldGetAllGenres() throws Exception {
         Genre genre = new Genre();
         genre.setId(1L);
@@ -55,6 +57,7 @@ class GenreControllerTest {
     }
 
     @Test
+    @WithMockUser
     void shouldCreateNewGenre() throws Exception {
         GenreDto requestDto = new GenreDto(null, "New Genre");
 
@@ -76,6 +79,7 @@ class GenreControllerTest {
     }
 
     @Test
+    @WithMockUser
     void shouldReturnAllGenresIncludingNewlyCreated() throws Exception {
         Genre genre1 = new Genre();
         genre1.setId(1L);
@@ -98,6 +102,7 @@ class GenreControllerTest {
     }
 
     @Test
+    @WithMockUser
     void shouldCreateGenreWithEmptyIdInRequest() throws Exception {
         GenreDto requestDto = new GenreDto(999L, "Test Name");
 

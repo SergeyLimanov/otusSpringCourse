@@ -13,7 +13,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
@@ -42,6 +44,7 @@ class BookControllerTest {
     private DtoMapper mapper;
 
     @Test
+    @WithMockUser
     void shouldGetAllBooks() throws Exception {
         Book book = new Book();
         book.setId(1L);
@@ -66,6 +69,7 @@ class BookControllerTest {
     }
 
     @Test
+    @WithMockUser
     void shouldGetBookById() throws Exception {
         Book book = new Book();
         book.setId(1L);
@@ -90,6 +94,7 @@ class BookControllerTest {
     }
 
     @Test
+    @WithMockUser
     void shouldReturnNotFoundForNonExistentBook() throws Exception {
         when(bookService.findById(99999L)).thenReturn(null);
 
@@ -98,6 +103,7 @@ class BookControllerTest {
     }
 
     @Test
+    @WithMockUser
     void shouldCreateNewBook() throws Exception {
         CreateBookRequest request = new CreateBookRequest("New Book", "Test Author", "Test Genre");
 
@@ -124,6 +130,7 @@ class BookControllerTest {
     }
 
     @Test
+    @WithMockUser
     void shouldCreateBookWithNewAuthorAndGenre() throws Exception {
         CreateBookRequest request = new CreateBookRequest("Book", "New Author", "New Genre");
 
@@ -149,6 +156,7 @@ class BookControllerTest {
     }
 
     @Test
+    @WithMockUser
     void shouldUpdateBook() throws Exception {
         UpdateBookRequest request = new UpdateBookRequest("Updated Title", "Test Author", "Test Genre");
 
@@ -175,6 +183,7 @@ class BookControllerTest {
     }
 
     @Test
+    @WithMockUser
     void shouldDeleteBook() throws Exception {
         doNothing().when(bookService).deleteById(1L);
 
@@ -185,6 +194,7 @@ class BookControllerTest {
     }
 
     @Test
+    @WithMockUser
     void shouldDeleteNonExistentBookWithoutError() throws Exception {
         doNothing().when(bookService).deleteById(99999L);
 

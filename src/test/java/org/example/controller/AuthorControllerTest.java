@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ class AuthorControllerTest {
     private DtoMapper mapper;
 
     @Test
+    @WithMockUser
     void shouldGetAllAuthors() throws Exception {
         Author author = new Author();
         author.setId(1L);
@@ -56,6 +58,7 @@ class AuthorControllerTest {
     }
 
     @Test
+    @WithMockUser
     void shouldCreateNewAuthor() throws Exception {
         AuthorDto requestDto = new AuthorDto(null, "New Author");
 
@@ -77,6 +80,7 @@ class AuthorControllerTest {
     }
 
     @Test
+    @WithMockUser
     void shouldReturnAllAuthorsIncludingNewlyCreated() throws Exception {
         Author author1 = new Author();
         author1.setId(1L);
@@ -99,6 +103,7 @@ class AuthorControllerTest {
     }
 
     @Test
+    @WithMockUser
     void shouldCreateAuthorWithEmptyIdInRequest() throws Exception {
         AuthorDto requestDto = new AuthorDto(999L, "Test Name");
 

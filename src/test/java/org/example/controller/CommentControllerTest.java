@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ class CommentControllerTest {
     private DtoMapper mapper;
 
     @Test
+    @WithMockUser
     void shouldGetCommentsByBookId() throws Exception {
         Comment comment = new Comment();
         comment.setId(1L);
@@ -59,6 +61,7 @@ class CommentControllerTest {
     }
 
     @Test
+    @WithMockUser
     void shouldReturnEmptyListForBookWithoutComments() throws Exception {
         when(commentService.findCommentsByBookId(999L)).thenReturn(new ArrayList<>());
         when(mapper.toCommentDtoList(any())).thenReturn(new ArrayList<>());
@@ -70,6 +73,7 @@ class CommentControllerTest {
     }
 
     @Test
+    @WithMockUser
     void shouldCreateNewComment() throws Exception {
         CommentDto requestDto = new CommentDto(null, "Very interesting!", 1L);
 
@@ -93,6 +97,7 @@ class CommentControllerTest {
 
 
     @Test
+    @WithMockUser
     void shouldUpdateComment() throws Exception {
         CommentDto requestDto = new CommentDto(null, "Updated comment", null);
 
@@ -117,6 +122,7 @@ class CommentControllerTest {
 
 
     @Test
+    @WithMockUser
     void shouldDeleteComment() throws Exception {
         doNothing().when(commentService).deleteComment(1L);
 
@@ -129,6 +135,7 @@ class CommentControllerTest {
 
 
     @Test
+    @WithMockUser
     void shouldCreateMultipleCommentsForSameBook() throws Exception {
         Comment comment1 = new Comment();
         comment1.setId(1L);
