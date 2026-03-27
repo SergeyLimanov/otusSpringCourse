@@ -1,0 +1,42 @@
+package org.example.controller;
+
+import org.example.dto.AuthorDto;
+import org.example.mapper.DtoMapper;
+import org.example.model.Author;
+import org.example.service.AuthorService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/authors")
+public class AuthorController {
+
+    private final AuthorService authorService;
+    private final DtoMapper mapper;
+
+    public AuthorController(AuthorService authorService, DtoMapper mapper) {
+        this.authorService = authorService;
+        this.mapper = mapper;
+    }
+
+    /**
+     * GET /api/authors - получить всех авторов
+     */
+    @GetMapping
+    public ResponseEntity<List<AuthorDto>> getAllAuthors() {
+        List<Author> authors = authorService.listAllAuthors();
+        return ResponseEntity.ok(mapper.toAuthorDtoList(authors));
+    }
+
+    /**
+     * POST /api/authors - создать нового автора
+     */
+    @PostMapping
+    public ResponseEntity<AuthorDto> createAuthor(@RequestBody AuthorDto authorDto) {
+        Author author = authorService.createAuthor(authorDto.getName());
+        return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toAuthorDto(author));
+    }
+}
