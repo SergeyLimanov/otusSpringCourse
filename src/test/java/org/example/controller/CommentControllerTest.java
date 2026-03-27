@@ -20,6 +20,7 @@ import java.util.NoSuchElementException;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -87,6 +88,7 @@ class CommentControllerTest {
         when(mapper.toCommentDto(comment)).thenReturn(responseDto);
 
         mockMvc.perform(post("/api/comments")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isCreated())
@@ -111,6 +113,7 @@ class CommentControllerTest {
         when(mapper.toCommentDto(comment)).thenReturn(responseDto);
 
         mockMvc.perform(put("/api/comments/{id}", 1L)
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isOk())
@@ -126,7 +129,7 @@ class CommentControllerTest {
     void shouldDeleteComment() throws Exception {
         doNothing().when(commentService).deleteComment(1L);
 
-        mockMvc.perform(delete("/api/comments/{id}", 1L))
+        mockMvc.perform(delete("/api/comments/{id}", 1L).with(csrf()))
                 .andExpect(status().isNoContent());
 
         verify(commentService, times(1)).deleteComment(1L);
@@ -154,12 +157,14 @@ class CommentControllerTest {
         when(mapper.toCommentDto(comment2)).thenReturn(dto2);
 
         mockMvc.perform(post("/api/comments")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new CommentDto(null, "First comment", 1L))))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.text").value("First comment"));
 
         mockMvc.perform(post("/api/comments")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new CommentDto(null, "Second comment", 1L))))
                 .andExpect(status().isCreated())

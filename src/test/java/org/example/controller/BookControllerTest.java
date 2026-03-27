@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -25,6 +24,7 @@ import java.util.NoSuchElementException;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -120,6 +120,7 @@ class BookControllerTest {
         when(mapper.toBookDto(book)).thenReturn(bookDto);
 
         mockMvc.perform(post("/api/books")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
@@ -147,6 +148,7 @@ class BookControllerTest {
         when(mapper.toBookDto(book)).thenReturn(bookDto);
 
         mockMvc.perform(post("/api/books")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
@@ -173,6 +175,7 @@ class BookControllerTest {
         when(mapper.toBookDto(book)).thenReturn(bookDto);
 
         mockMvc.perform(put("/api/books/{id}", 1L)
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -187,7 +190,7 @@ class BookControllerTest {
     void shouldDeleteBook() throws Exception {
         doNothing().when(bookService).deleteById(1L);
 
-        mockMvc.perform(delete("/api/books/{id}", 1L))
+        mockMvc.perform(delete("/api/books/{id}", 1L).with(csrf()))
                 .andExpect(status().isNoContent());
 
         verify(bookService, times(1)).deleteById(1L);
@@ -198,7 +201,7 @@ class BookControllerTest {
     void shouldDeleteNonExistentBookWithoutError() throws Exception {
         doNothing().when(bookService).deleteById(99999L);
 
-        mockMvc.perform(delete("/api/books/{id}", 99999L))
+        mockMvc.perform(delete("/api/books/{id}", 99999L).with(csrf()))
                 .andExpect(status().isNoContent());
     }
 }
