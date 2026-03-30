@@ -11,6 +11,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -25,7 +28,14 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(AuthorController.class)
+@WebMvcTest(controllers = AuthorController.class,
+        excludeAutoConfiguration = {
+                org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration.class,
+                org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration.class
+        },
+        excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
+                classes = {org.example.security.JwtAuthenticationFilter.class,
+                        org.example.config.SecurityConfig.class}))
 class AuthorControllerTest {
 
     @Autowired
@@ -40,14 +50,7 @@ class AuthorControllerTest {
     @MockBean
     private DtoMapper mapper;
 
-    @MockBean
-    private JwtTokenProvider jwtTokenProvider;
-
-    @MockBean
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
-
     @Test
-    @WithMockUser
     void shouldGetAllAuthors() throws Exception {
         Author author = new Author();
         author.setId(1L);
@@ -67,7 +70,6 @@ class AuthorControllerTest {
     }
 
     @Test
-    @WithMockUser
     void shouldCreateNewAuthor() throws Exception {
         AuthorDto requestDto = new AuthorDto(null, "New Author");
 
@@ -81,7 +83,6 @@ class AuthorControllerTest {
         when(mapper.toAuthorDto(author)).thenReturn(responseDto);
 
         mockMvc.perform(post("/api/authors")
-                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isCreated())
@@ -90,7 +91,6 @@ class AuthorControllerTest {
     }
 
     @Test
-    @WithMockUser
     void shouldReturnAllAuthorsIncludingNewlyCreated() throws Exception {
         Author author1 = new Author();
         author1.setId(1L);
@@ -113,7 +113,6 @@ class AuthorControllerTest {
     }
 
     @Test
-    @WithMockUser
     void shouldCreateAuthorWithEmptyIdInRequest() throws Exception {
         AuthorDto requestDto = new AuthorDto(999L, "Test Name");
 
@@ -127,7 +126,6 @@ class AuthorControllerTest {
         when(mapper.toAuthorDto(author)).thenReturn(responseDto);
 
         mockMvc.perform(post("/api/authors")
-                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isCreated())
