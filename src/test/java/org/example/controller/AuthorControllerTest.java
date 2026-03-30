@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.dto.AuthorDto;
 import org.example.mapper.DtoMapper;
 import org.example.model.Author;
+import org.example.security.JwtAuthenticationFilter;
+import org.example.security.JwtTokenProvider;
 import org.example.service.AuthorService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,12 @@ class AuthorControllerTest {
 
     @MockBean
     private DtoMapper mapper;
+
+    @MockBean
+    private JwtTokenProvider jwtTokenProvider;
+
+    @MockBean
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Test
     @WithMockUser

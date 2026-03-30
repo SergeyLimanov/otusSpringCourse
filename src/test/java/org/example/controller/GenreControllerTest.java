@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.dto.GenreDto;
 import org.example.mapper.DtoMapper;
 import org.example.model.Genre;
+import org.example.security.JwtAuthenticationFilter;
+import org.example.security.JwtTokenProvider;
 import org.example.service.GenreService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,12 @@ class GenreControllerTest {
 
     @MockBean
     private DtoMapper mapper;
+
+    @MockBean
+    private JwtTokenProvider jwtTokenProvider;
+
+    @MockBean
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Test
     @WithMockUser

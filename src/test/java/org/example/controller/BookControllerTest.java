@@ -8,6 +8,8 @@ import org.example.dto.CreateBookRequest;
 import org.example.dto.UpdateBookRequest;
 import org.example.mapper.DtoMapper;
 import org.example.model.Book;
+import org.example.security.JwtAuthenticationFilter;
+import org.example.security.JwtTokenProvider;
 import org.example.service.BookService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,12 @@ class BookControllerTest {
 
     @MockBean
     private DtoMapper mapper;
+
+    @MockBean
+    private JwtTokenProvider jwtTokenProvider;
+
+    @MockBean
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Test
     @WithMockUser

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.dto.CommentDto;
 import org.example.mapper.DtoMapper;
 import org.example.model.Comment;
+import org.example.security.JwtAuthenticationFilter;
+import org.example.security.JwtTokenProvider;
 import org.example.service.CommentService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,12 @@ class CommentControllerTest {
 
     @MockBean
     private DtoMapper mapper;
+
+    @MockBean
+    private JwtTokenProvider jwtTokenProvider;
+
+    @MockBean
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Test
     @WithMockUser
