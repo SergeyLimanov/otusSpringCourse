@@ -1,6 +1,7 @@
 package org.example.config;
 
 import org.example.security.JwtAuthenticationFilter;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,6 +13,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.client.RestTemplate;
 
 @Configuration
 @EnableWebSecurity
@@ -34,6 +36,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**", "/h2-console/**").permitAll()
                         .requestMatchers("/login", "/").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
+                        .requestMatchers("/api/authors/external/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .headers(headers -> headers
@@ -52,5 +55,13 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
+
+    @Bean
+    public RestTemplate restTemplate(RestTemplateBuilder builder) {
+        return builder
+                .setConnectTimeout(java.time.Duration.ofSeconds(5))
+                .setReadTimeout(java.time.Duration.ofSeconds(10))
+                .build();
     }
 }
