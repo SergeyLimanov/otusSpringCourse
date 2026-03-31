@@ -26,7 +26,7 @@ public class ApplicationHealthIndicator implements HealthIndicator {
     public Health health() {
         try {
             long bookCount = bookService.findAll().size();
-            long authorCount = authorService.findAll().size();
+            long authorCount = authorService.listAllAuthors().size();
 
             if (bookCount > 0 && authorCount > 0) {
                 return Health.up()
@@ -36,7 +36,7 @@ public class ApplicationHealthIndicator implements HealthIndicator {
                         .withDetail("authors_count", authorCount)
                         .build();
             } else {
-                return Health.degraded()
+                return Health.outOfService()
                         .withDetail("application", "Library Application")
                         .withDetail("status", "Limited data available")
                         .withDetail("books_count", bookCount)
