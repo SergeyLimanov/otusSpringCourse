@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Library Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        .user-info {
+            background-color: #e7f3ff;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .logout-form {
+            display: inline;
+        }
+        button {
+            padding: 8px 16px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #c82333;
+        }
+        .api-info {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #28a745;
+        }
+        .api-info h3 {
+            margin-top: 0;
+        }
+        .api-info ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .api-info li {
+            margin: 8px 0;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Library Application</h1>
+
+    <div class="user-info">
+        <p>Welcome, <strong sec:authentication="name">User</strong>!</p>
+        <p>Your role: <span sec:authentication="principal.authorities">ROLE</span></p>
+        <form th:action="@{/logout}" method="post" class="logout-form">
+            <button type="submit">Logout</button>
+        </form>
+    </div>
+
+    <div class="api-info">
+        <h3>Available REST API Endpoints:</h3>
+        <ul>
+            <li><strong>GET</strong> /api/books - Get all books</li>
+            <li><strong>GET</strong> /api/books/{id} - Get book by ID</li>
+            <li><strong>POST</strong> /api/books - Create new book</li>
+            <li><strong>PUT</strong> /api/books/{id} - Update book</li>
+            <li><strong>DELETE</strong> /api/books/{id} - Delete book</li>
+            <li><strong>GET</strong> /api/authors - Get all authors</li>
+            <li><strong>GET</strong> /api/genres - Get all genres</li>
+            <li><strong>GET</strong> /api/comments - Get all comments</li>
+            <li><strong>POST</strong> /api/comments - Create new comment</li>
+        </ul>
+        <p><em>All endpoints require authentication.</em></p>
+    </div>
+</div>
+</body>
+</html>
