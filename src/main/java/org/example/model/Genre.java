@@ -9,8 +9,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "genres")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(exclude = "books")

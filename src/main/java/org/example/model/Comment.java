@@ -6,8 +6,7 @@ import lombok.*;
 
 @Entity
 @Table(name = "comments")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(exclude = "book")

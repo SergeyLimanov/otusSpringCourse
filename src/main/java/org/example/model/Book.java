@@ -8,8 +8,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "books")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(exclude = {"author", "genre", "comments"})

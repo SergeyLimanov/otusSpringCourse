@@ -11,8 +11,7 @@ import java.util.Collections;
 
 @Entity
 @Table(name = "users")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(exclude = "password")
@@ -32,6 +31,16 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     private boolean enabled = true;
+
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
