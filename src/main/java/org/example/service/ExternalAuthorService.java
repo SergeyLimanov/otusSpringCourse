@@ -1,5 +1,10 @@
 package org.example.service;
 
+import io.github.resilience4j.bulkhead.annotation.Bulkhead;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.github.resilience4j.retry.annotation.Retry;
+import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 import org.example.dto.AuthorRequest;
 import org.example.dto.AuthorResponse;
 import org.example.dto.ExternalAuthorDto;
@@ -49,10 +54,20 @@ public class ExternalAuthorService {
 
     /**
      * Получить авторов из внешнего сервиса по имени через Kafka
+     * 
+     * Защищено Resilience4j паттернами:
+     * - CircuitBreaker: защита от каскадных сбоев
+     * - Retry: автоматические повторные попытки
+     * - RateLimiter: ограничение частоты запросов
+     * - Bulkhead: ограничение параллельных вызовов
      *
      * @param name имя автора для поиска (опциональный параметр)
      * @return список авторов
      */
+    @CircuitBreaker(name = "externalAuthorService", fallbackMethod = "getSouthAmericaAuthorsFallback")
+    @Retry(name = "externalAuthorService")
+    @RateLimiter(name = "externalAuthorService")
+    @Bulkhead(name = "externalAuthorService")
     public List<ExternalAuthorDto> getSouthAmericaAuthors(String name) {
         // Генерируем уникальный ID запроса для корреляции
         String requestId = UUID.randomUUID().toString();
@@ -134,5 +149,22 @@ public class ExternalAuthorService {
         } else {
             logger.warn("Received response for unknown request ID: {}", requestId);
         }
+    }
+    
+    /**
+     * Fallback метод для getSouthAmericaAuthors
+     * Вызывается когда Circuit Breaker открыт или все retry попытки исчерпаны
+     * 
+     * @param name имя автора
+     * @param ex исключение, которое вызвало fallback
+     * @return пустой список авторов
+     */
+    private List<ExternalAuthorDto> getSouthAmericaAuthorsFallback(String name, Exception ex) {
+        logger.error("=== Fallback активирован для getSouthAmericaAuthors ===");
+        logger.error("Причина: {}", ex.getMessage());
+        logger.warn("Возвращаем пустой список авторов из-за недоступности внешнего сервиса");
+        
+        // Можно вернуть кешированные данные или данные по умолчанию
+        return Collections.emptyList();
     }
 }
