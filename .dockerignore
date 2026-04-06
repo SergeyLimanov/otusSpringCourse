@@ -1,0 +1,30 @@
+# Git
+.git
+.gitignore
+
+# IDE
+.idea
+*.iml
+.vscode
+.eclipse
+
+# Maven
+.mvn
+mvnw
+mvnw.cmd
+
+# Logs
+logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docs
+README.md
+*.md
+
+# Source (не нужны в образе, только jar)
+src
+pom.xml
