@@ -44,13 +44,14 @@ public class ExternalAuthorService {
 
     /**
      * Получить авторов из внешнего сервиса по имени
-     * Применяет Circuit Breaker, Retry и TimeLimiter для устойчивости к сбоям
+     * Применяет Retry, затем Circuit Breaker для устойчивости к сбоям
+     * Порядок важен: сначала Retry пытается повторить, потом Circuit Breaker проверяет общую статистику
      *
      * @param name имя автора для поиска (опциональный параметр)
      * @return список авторов
      */
-    @CircuitBreaker(name = "externalAuthors", fallbackMethod = "getFallbackAuthors")
-    @Retry(name = "externalAuthors")
+    @Retry(name = "externalAuthors", fallbackMethod = "getFallbackAuthors")
+    @CircuitBreaker(name = "externalAuthors")
     public List<ExternalAuthorDto> getSouthAmericaAuthors(String name) {
         String url = externalServiceUrl + "/api/authors/south-america";
 
@@ -73,18 +74,24 @@ public class ExternalAuthorService {
     }
 
     /**
-     * Fallback метод для Circuit Breaker
-     * Вызывается когда внешний сервис недоступен или Circuit Breaker открыт
+     * Fallback метод для Retry
+     * Вызывается когда внешний сервис недоступен после всех retry попыток
      *
      * @param name параметр поиска
      * @param throwable исключение, вызвавшее fallback
-     * @return пустой список или кэшированные данные
+     * @return тестовые данные для демонстрации работы fallback
      */
     private List<ExternalAuthorDto> getFallbackAuthors(String name, Throwable throwable) {
-        logger.error("Fallback triggered for getSouthAmericaAuthors. Reason: {}", throwable.getMessage());
-        logger.warn("Returning empty list due to external service unavailability");
-        
-        // В production здесь можно вернуть кэшированные данные или данные из резервного источника
-        return Collections.emptyList();
+        logger.error("⚠️ FALLBACK TRIGGERED! External service unavailable. Reason: {}", throwable.getMessage());
+        logger.warn("📦 Returning mock data from fallback method");
+
+        // Возвращаем тестовые данные, чтобы показать что fallback работает
+        List<ExternalAuthorDto> fallbackData = Arrays.asList(
+                new ExternalAuthorDto(999L, "🔄 FALLBACK: Paulo Coelho (cached)"),
+                new ExternalAuthorDto(998L, "🔄 FALLBACK: Gabriel García Márquez (cached)")
+        );
+
+        logger.info("✅ Returned {} authors from fallback cache", fallbackData.size());
+        return fallbackData;
     }
 }
